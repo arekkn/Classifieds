@@ -1,0 +1,51 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+    <h2>Posts by {{ view.kwargs.username }}: {{ page_obj.paginator.count }}</h2>
+    {% for post in list_of_posts %}
+        <div class="card my-3">
+        <div class="card-header">
+            <table>
+                <tr>
+                {% for place in post.places.all %}
+                    <td>#{{ place.place }} </td>
+                {% endfor %}
+                </tr>
+            </table>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"><a href="/posts/{{ post.id }}">{{ post.title }}</a></h5>
+            <p class="card-text">{{ post.content }}</p>
+        </div>
+        <div class="card-footer">
+            <tr>
+                <td><img class="rounded" src="{{ post.author.profile.image.url }}"></td>
+                <td><a href="{% url 'user-posts' post.author.username  %}" >{{ post.author }}</a></td>
+                <td>{{ post.pub_date|date:"F d, Y H:i"  }}</td>
+            </tr>
+        </div>
+    </div>
+    {% endfor %}
+    {% if is_paginated %}
+            <nav class="my-4" aria-label="...">
+                <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                         <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3'%}
+                        <li class="page-item" aria-current="page"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+
+    <div class="card my-3">
+        <div class="card-header">
+            <table>
+                <tr>
+                {% for place in list_of_places %}
+                    <td>#{{ place.place }} </td>
+                {% endfor %}
+                </tr>
+            </table>
+        </div>
+        <div class="card-body">
+            <div class="d-flex align-items-center"></div>
+            <h5 class="card-title"><a href="/posts/{{ post.id }}">{{ post.title }}</a></h5>
+            <p class="card-text">{{ post.content }}</p>
+        </div>
+        <div class="card-footer">
+            <tr>
+                <td><img class="rounded" src="{{ post.author.profile.image.url }}"></td>
+                <td><a href="{% url 'user-posts' post.author.username  %}" >{{ post.author }}</a></td>
+                <td>{{ post.pub_date|date:"F d, Y H:i" }}</td>
+            {% if post.author == user %}
+                <a class="btn btn-primary" href="{% url 'post-update' post.id %}">Update</a>
+                <a class="btn btn-primary" href="{% url 'post-delete' post.id %}">Delete</a>
+            {% endif %}
+            </tr>
+        </div>
+    </div>
+
+    {% for comment in list_of_comments %}
+        <div class="card my-3">
+            <div class="card-header">
+                <tr>
+                    <td><img class="rounded" src="{{ comment.author.profile.image.url }}"></td>
+                    <td><a href="{% url 'user-posts' comment.author.username %}" >{{ comment.author }}</a></td>
+                    <td>{{ comment.pub_date|date:"F d, Y H:i" }}</td>
+                </tr>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ comment.content }}</p>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if request.user.is_authenticated %}
+        <div class="card my-3">
+            <div class="card-header">
+                <h5>Add a comment</h5>
+            </div>
+            <form method="post" action="{{request.get_full_path}}">
+                {% csrf_token %}
+                <div class="card-body form-control" data-bs-theme="dark">
+                    {{ form.as_table }}
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="Add comment" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    {% endif %}
+
+{% endblock %}

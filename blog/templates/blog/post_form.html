@@ -1,0 +1,18 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <form id="myform" method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Blog post</legend>
+                {{ form }}
+            </fieldset>
+            <div class="my-3 form-group">
+                <button class="btn btn-primary" type="submit">Post</button>
+                <a class="btn btn-secondary" href="http://127.0.0.1:8000/">Cancel</a>
+            </div>
+        </form>
+        {% load static %}
+        <script src="{% static 'blog/js/validate_post.js' %}"></script>
+    </div>
+{% endblock content %}

@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'blog/css/bootstrap.css' %}">
+
+</head>
+<body>
+<div id="page-container">
+<div id="content-wrap">
+{% include "blog/navigation.html" %}
+<main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8">
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+            {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+</main>
+   </div>
+   {% include "blog/footer.html" %}
+ </div>
+<script src="{% static 'blog/js/bootstrap.js' %}"></script>
+</body>
+</html>
